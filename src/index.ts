@@ -1,11 +1,23 @@
 import express from 'express'
+import MongoDB from './Providers/Mongodb'
 
 const app = express()
 
 app.use(express.json())
 
+const uri = 'mongodb+srv://luisjvaldiviezo:Zf91WkuSOuhzjfEZ@cluster0.qqpuche.mongodb.net/?retryWrites=true&w=majority'
+
+const mongodb = new MongoDB(uri)
 // /api/v1/card/insert → insert a new card.
-app.post('/api/v1/card/insert', (_req, res) => {
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.post('/api/v1/card/insert', async (_req, res) => {
+  await mongodb.connect()
+  await mongodb.insertOne('Cards', {
+    code: '123456',
+    status: 'active',
+    mode: 'normal',
+    payment: 'cash'
+  })
   res.send('insert a new card')
 })
 
