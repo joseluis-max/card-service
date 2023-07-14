@@ -19,14 +19,14 @@ export enum Mode {
 export interface Card {
   code: string // ok
   state: State // active, inactive
-  status: Status // active, inactive
+  status: Status // on, off
   mode: Mode //
   payment: boolean
   service: ObjectId
-  start: DateTime
-  end: DateTime
-  since: DateTime
-  until: Datetime
-  createdAt: DateTime
-  updatedAt: DateTime
+  start: Date
+  end: Date
+  since: Date
+  until: Date
+  createdAt: Date
+  updatedAt: Date
 }

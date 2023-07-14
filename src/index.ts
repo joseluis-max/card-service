@@ -16,7 +16,7 @@ app.post('/api/v1/card/insert', async (req, res) => {
     await mongodb.connect()
     await mongodb.insertOne('Cards', newCard)
     res.status(200).json({
-      message: 'card inserted',
+      message: 'Card inserted successfully',
       card: newCard
     })
   } catch (e: any) {

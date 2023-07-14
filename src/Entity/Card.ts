@@ -1,31 +1,32 @@
 import { ObjectId } from 'mongodb'
-import { Mode, State, Status } from '../types'
+import { Mode, State, Status, Card } from '../types'
 
-export default class Card {
+export default class _Card {
   code: string // ok
   state: State // active, inactive
-  status: Status // active, inactive
+  status: Status // on, off
   mode: Mode //
   payment: boolean
   service: ObjectId
   start: Date // Date
-  end: DateTime
-  since: DateTime
-  until: Datetime
-  createdAt: DateTime
-  updatedAt: DateTime
-  constructor(object) {
+  end: Date
+  since: Date
+  until: Date
+  createdAt: Date
+  updatedAt: Date
+
+  constructor (object: Card) {
     this.code = object.code
     this.state = object.state
     this.status = object.status
     this.mode = object.mode
     this.payment = object.payment
     this.service = object.service
-    this.start = object.start
-    this.end = object.end
-    this.since = object.since
-    this.until = object.until
-    this.createdAt = object.createdAt
-    this.updatedAt = object.updatedAt
+    this.start = new Date(object.start)
+    this.end = new Date(object.end)
+    this.since = new Date(object.since)
+    this.until = new Date(object.until)
+    this.createdAt = new Date()
+    this.updatedAt = new Date()
   }
 }
