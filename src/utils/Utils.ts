@@ -1,11 +1,18 @@
+import { ObjectId } from 'mongodb'
 import _Card from '../Entity/Card'
 import { Card, State, Status, Mode } from '../types'
 
 const isString = (str: any): boolean => typeof str === 'string'
-const isNumber = (number: any): boolean => typeof number === 'number'
+// const isNumber = (number: any): boolean => typeof number === 'number'
 const isBoolean = (field: any): boolean => typeof field === 'boolean'
-const isDateTime = (field: any): boolean => new Date(field) instanceof Date
+// const isDateTime = (field: any): boolean => new Date(field) instanceof Date
 const isNull = (field: any): boolean => field === undefined || field === null
+
+export function validateId(id: any) {
+  if (isNull(id)) throw new Error('Attribute id is required')
+  if (!ObjectId.isValid(id)) throw new Error('Attribute id is not valid')
+  return id
+}
 
 export function validateCard (body: any): Card {
   // code
@@ -34,25 +41,7 @@ export function validateCard (body: any): Card {
 
   // service
   if (isNull(body.service)) throw new Error('Attribute service is required')
-  if (!isNumber(body.service)) throw new Error('Attribute service must be a number')
-
-  // start
-  console.log(new Date(body.start).toLocaleString())
-  console.log(new Date(body.start) instanceof Date)
-  console.log(new Date(body.start).toLocaleString('es-ES', { timeZone: 'America/Bogota' }))
-  if (isNull(body.start)) throw new Error('Attribute start is required')
-  if (!isDateTime(body.start)) throw new Error('Attribute start must be a date string format')
-  // end
-  if (isNull(body.end)) throw new Error('Attribute end is required')
-  if (!isDateTime(body.end)) throw new Error('Attribute end must be a date string format')
-
-  // since
-  if (isNull(body.since)) throw new Error('Attribute since is required')
-  if (!isDateTime(body.since)) throw new Error('Attribute since must be a date string format')
-
-  // until
-  if (isNull(body.until)) throw new Error('Attribute until is required')
-  if (!isDateTime(body.until)) throw new Error('Attribute until must be a date string format')
+  if (!ObjectId.isValid(body.service)) throw new Error('Attribute service must be a number')
 
   return new _Card(body)
 }

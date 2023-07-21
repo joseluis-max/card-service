@@ -16,17 +16,18 @@ export default class _Card {
   updatedAt: Date
 
   constructor (object: Card) {
+    const now = new Date()
     this.code = object.code
     this.state = object.state
     this.status = object.status
     this.mode = object.mode
     this.payment = object.payment
     this.service = object.service
-    this.start = new Date(object.start)
-    this.end = new Date(object.end)
-    this.since = new Date(object.since)
-    this.until = new Date(object.until)
-    this.createdAt = new Date()
-    this.updatedAt = new Date()
+    this.start = now
+    this.end = now
+    this.since = now
+    this.until = now
+    this.createdAt = now
+    this.updatedAt = now
   }
 }

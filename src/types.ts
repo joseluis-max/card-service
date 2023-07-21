@@ -30,3 +30,11 @@ export interface Card {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface Database {
+  readonly _client: any
+  connect: () => Promise<void>
+  disconnect: () => Promise<void>
+  getCollection: (collectionName: string) => any
+  insertOne: (collectionName: string, document: any) => Promise<void>
+}
