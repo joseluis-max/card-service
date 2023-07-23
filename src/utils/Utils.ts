@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import _Card from '../Entity/Card'
-import { Card, State, Status, Mode } from '../types'
+import { Card, State, Mode } from '../types'
 
 const isString = (str: any): boolean => typeof str === 'string'
 // const isNumber = (number: any): boolean => typeof number === 'number'
@@ -27,8 +27,7 @@ export function validateCard (body: any): Card {
 
   // status
   if (isNull(body.status)) throw new Error('Attribute status is required')
-  if (!isString(body.status)) throw new Error('Attribute status must be a string')
-  if (!Object.values(Status).includes(body.status)) throw new Error('Attribute status must be On or Off')
+  if (!isBoolean(body.status)) throw new Error('Attribute status must be boolean')
 
   // mode
   if (isNull(body.mode)) throw new Error('Attribute mode is required')

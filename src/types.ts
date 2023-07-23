@@ -1,10 +1,5 @@
 import { ObjectId } from 'mongodb'
 
-export enum Status {
-  on = 'On',
-  off = 'Off'
-}
-
 export enum State {
   active = 'active',
   inactive = 'inactive'
@@ -12,14 +7,14 @@ export enum State {
 
 export enum Mode {
   time = 'time',
-  montly = 'montly',
+  montly = 'monthly',
   recharge = 'recharge'
 }
 
 export interface Card {
   code: string // ok
   state: State // active, inactive
-  status: Status // on, off
+  status: boolean
   mode: Mode //
   payment: boolean
   service: ObjectId

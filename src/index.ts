@@ -1,12 +1,14 @@
 import express from 'express'
-import { ObjectId } from 'mongodb'
 import MongoDB from './Providers/Mongodb'
+import { ObjectId } from 'mongodb'
 import { validateCard } from './utils/Utils'
-import { Card, State, Status } from './types'
+import { Card, State, Mode } from './types'
 const app = express()
 app.use(express.json())
 const uri = 'mongodb+srv://luisjvaldiviezo:Zf91WkuSOuhzjfEZ@cluster0.qqpuche.mongodb.net/?retryWrites=true&w=majority'
 const db = new MongoDB(uri)
+
+//TODO: change state to boolean
 
 // /api/v1/card/insert → insert a new card.
 app.post('/api/v1/card/insert', async (req, res) => {
@@ -63,14 +65,15 @@ app.put('/api/v1/card/read/:id', async (req, res) => {
     const card = await db.findOne('Cards', { _id: new ObjectId(id) })
     if (!card) throw new Error('Card not found !')
 
-    if (card.status === Status.off) throw new Error('Card not updated, is Off !')
+    if (!card.status) throw new Error('Card not updated, is Off !')
 
     if (card.state === State.inactive) {
-      await db.updateOne('Cards', { _id: new ObjectId(id), status: Status.on },  { $set: {'start': new Date(), 'state': State.active }})
+      await db.updateOne('Cards', { _id: new ObjectId(id), state: State.inactive },  { $set: {'start': new Date(), 'state': State.active }})
     } else {
-      await db.updateOne('Cards', { _id: new ObjectId(id), status: Status.on },  { $set: {'end': new Date(), 'state': State.inactive }})
+      await db.updateOne('Cards', { _id: new ObjectId(id), state: State.active },  { $set: {'end': new Date(), 'state': State.inactive }})
     }
 
+    // TODO: search service and change for id service in card
     res.status(200).send({
       message: 'Card update !',
       card: await db.findOne('Cards', { _id: new ObjectId(id) })
@@ -82,18 +85,60 @@ app.put('/api/v1/card/read/:id', async (req, res) => {
 })
 
 // api/v1/card/update/:id → update info card.
-app.put('/api/v1/card/update/:id', (_req, res) => {
-  res.send('update info card')
+app.put('/api/v1/card/update/:id', (_req, _res) => {
+
 })
 
 // api/v1/card/mode/:id → change working mode card.
-app.put('/api/v1/card/mode/:id', (_req, res) => {
-  res.send('change working mode card')
+app.post('/api/v1/card/mode/:id/:mode', async (req, res) => {
+  try {
+    const { id, mode } = req.params
+    if (!Object.keys(Mode).includes(mode)) throw new Error(`Mode not found, will be one of the followings: ${Object.values(Mode).join(",")}!`)
+    await db.connect()
+    const card = await db.findOne('Cards', { _id: new ObjectId(id) })
+    if (!card) throw new Error('Card not found !')
+    await db.updateOne('Cards', { _id: new ObjectId(id) },  { $set: {'mode': mode }})
+    res.status(200).send({
+      message: 'Mode changed !',
+      card: await db.findOne('Cards', { _id: new ObjectId(id) })
+    })
+  } catch (e: any) {
+    res.status(400).send(e.message)
+  }
 })
 
-// api/v1/card/mode/:id → change card mode payment
-app.put('/api/v1/card/payment/:id', (_req, res) => {
-  res.send('change card mode payment')
+// api/v1/card/mode/:id → change card payment
+app.put('/api/v1/card/payment/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    await db.connect()
+    const card = await db.findOne('Cards', { _id: new ObjectId(id) })
+    if (!card) throw new Error('Card not found !')
+    await db.updateOne('Cards', { _id: new ObjectId(id) },  { $set: {'payment': !card.payment }})
+    res.status(200).send({
+      message: 'Payment Changed !',
+      card: await db.findOne('Cards', { _id: new ObjectId(id) })
+    })
+  } catch (e: any) {
+    res.status(400).send(e.message)
+  }
+})
+
+// api/v1/card/status/:id → change card status
+app.put('/api/v1/card/status/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    await db.connect()
+    const card = await db.findOne('Cards', { _id: new ObjectId(id) })
+    if (!card) throw new Error('Card not found !')
+    await db.updateOne('Cards', { _id: new ObjectId(id) },  { $set: {'status': !card.status }})
+    res.status(200).send({
+      message: 'Payment Changed !',
+      card: await db.findOne('Cards', { _id: new ObjectId(id) })
+    })
+  } catch (e: any) {
+    res.status(400).send(e.message)
+  }
 })
 
 app.listen(3000, () => {
