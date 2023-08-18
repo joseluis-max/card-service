@@ -8,7 +8,7 @@ const isBoolean = (field: any): boolean => typeof field === 'boolean'
 // const isDateTime = (field: any): boolean => new Date(field) instanceof Date
 const isNull = (field: any): boolean => field === undefined || field === null
 
-export function validateId(id: any) {
+export function validateId (id: any): ObjectId {
   if (isNull(id)) throw new Error('Attribute id is required')
   if (!ObjectId.isValid(id)) throw new Error('Attribute id is not valid')
   return id

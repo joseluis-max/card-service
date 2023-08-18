@@ -16,7 +16,7 @@ export default class MongoDB implements Database {
   }
 
   getCollection (collectionName: string): Collection<Document> {
-    return this._client.db().collection(collectionName)
+    return this._client.db('Tree').collection(collectionName)
   }
 
   async insertOne (collectionName: string, document: Document): Promise<void> {

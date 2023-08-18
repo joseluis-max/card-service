@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb'
-import { Mode, State, Status, Card } from '../types'
+import { Mode, State, Card } from '../types'
 
 export default class _Card {
   code: string // ok
   state: State // active, inactive
-  status: Status // on, off
+  status: boolean // on, off
   mode: Mode //
   payment: boolean
   service: ObjectId
